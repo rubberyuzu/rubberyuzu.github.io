@@ -9,6 +9,7 @@
   <p id="temp-presence">Temporary storage is here!</p>
 
   <h4>On Pageshow</h4>
+  <p id="type"></p>
   <p id="nrr"></p>
   <p id="persisted"></p>
 
@@ -17,6 +18,7 @@
   <script>
   onpageshow = (event) => {
     document.getElementById("persisted").textContent = "persisted: " + event.persisted;
+    document.getElementById("type").textContent = "type: " + performance.getEntriesByType("navigation")[0].type;
     let reasonsText = "notRestoredReasons: ";
     let reasons = performance.getEntriesByType("navigation")[0].notRestoredReasons;
     if (reasons != null) {
