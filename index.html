@@ -1,4 +1,81 @@
 <body>
-    <script></script>
-    <button type="button">Set</button>
+  <button type="button" id="perm">Set permanent storage</button>
+  <br><br>
+  <button type="button" id="temp">Set temporary storage</button>
+  <br><br>
+
+  <h4>Cookie presence:</h4>
+  <p id="perm-presence">Permanent storage is here!</p>
+  <p id="temp-presence">Temporary storage is here!</p>
+
+  <h4>On Pageshow</h4>
+  <p id="nrr"></p>
+  <p id="persisted"></p>
+
+  <br>
+  <a href="https://google.com">Navigate away to google.com</a>
+  <script>
+  onpageshow = (event) => {
+    document.getElementById("persisted").textContent = "persisted: " + event.persisted;
+    let reasonsText = "notRestoredReasons: ";
+    let reasons = performance.getEntriesByType("navigation")[0].notRestoredReasons;
+    if (reasons != null) {
+      reasonsText += "preventedBackForwardCache: " + reasons.preventedBackForwardCache + ", ";
+      if (reasons.preventedBackForwardCache == "yes") {
+        reasonsText+= "reasons: "
+        for (let i = 0; i < reasons.reasons.length; i++) {
+          reasonsText+= reasons.reasons[i] + ","
+        }
+      }
+    } else {
+      reasonsText += "null"; 
+    }
+    document.getElementById("nrr").textContent = reasonsText;
+  }
+
+  if (sessionStorage.getItem("perm") == "true") {
+   document.getElementById("perm-presence").style.display = "block";
+   document.getElementById("perm").textContent = "Unset permanent storage";
+   } else {
+   document.getElementById("perm-presence").style.display = "none"; 
+  }
+
+  if (sessionStorage.getItem("temp") == "true") {
+   document.getElementById("temp-presence").style.display = "block";
+   document.getElementById("temp").textContent = "Unset temporary storage";
+  } else {
+   document.getElementById("temp-presence").style.display = "none"; 
+  }
+
+  document.getElementById("perm").addEventListener('click', function(){
+   this.classList.toggle('set');
+   if (this.classList.contains("set")) {
+     sessionStorage.setItem("perm", "true");
+     this.textContent="Unset permanent storage";
+     document.getElementById("perm-presence").style.display = "block";
+   } else {
+     sessionStorage.removeItem("perm"); 
+     this.textContent="Set permanent storage";
+     document.getElementById("perm-presence").style.display = "none";
+   }
+  });
+
+  document.getElementById("temp").addEventListener('click', function(){
+   this.classList.toggle('set');
+   if (this.classList.contains("set")) {
+     sessionStorage.setItem("temp", "true");
+     onpagehide = () => {
+       sessionStorage.removeItem("temp");
+     }
+     this.textContent="Unset temporary storage";
+     document.getElementById("temp-presence").style.display = "block";
+   } else {
+     sessionStorage.removeItem("temp");
+     this.textContent="Set temporary storage"; 
+     document.getElementById("temp-presence").style.display = "none";
+   }
+  });
+
+
+  </script>
 </body>
