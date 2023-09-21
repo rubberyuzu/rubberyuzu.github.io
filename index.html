@@ -4,7 +4,7 @@
   <button type="button" id="temp">Set temporary storage</button>
   <br><br>
 
-  <h4>Cookie presence:</h4>
+  <h4>Storage presence:</h4>
   <p id="perm-presence">Permanent storage is here!</p>
   <p id="temp-presence">Temporary storage is here!</p>
 
@@ -16,6 +16,23 @@
   <br>
   <a href="https://google.com">Navigate away to google.com</a>
   <script>
+  function drawPage() {
+    if (sessionStorage.getItem("perm") == "true") {
+      document.getElementById("perm-presence").style.display = "block";
+      document.getElementById("perm").textContent = "Unset permanent storage";
+    } else {
+      document.getElementById("perm-presence").style.display = "none"; 
+      document.getElementById("perm").textContent = "Set permanent storage"; 
+   }
+
+    if (sessionStorage.getItem("temp") == "true") {
+      document.getElementById("temp-presence").style.display = "block";
+      document.getElementById("temp").textContent = "Unset temporary storage";
+    } else {
+      document.getElementById("temp-presence").style.display = "none";
+      document.getElementById("temp").textContent = "Set temporary storage";
+    }
+  }
   onpageshow = (event) => {
     document.getElementById("persisted").textContent = "persisted: " + event.persisted;
     document.getElementById("type").textContent = "type: " + performance.getEntriesByType("navigation")[0].type;
@@ -33,33 +50,17 @@
       reasonsText += "null"; 
     }
     document.getElementById("nrr").textContent = reasonsText;
-  }
-
-  if (sessionStorage.getItem("perm") == "true") {
-   document.getElementById("perm-presence").style.display = "block";
-   document.getElementById("perm").textContent = "Unset permanent storage";
-   } else {
-   document.getElementById("perm-presence").style.display = "none"; 
-  }
-
-  if (sessionStorage.getItem("temp") == "true") {
-   document.getElementById("temp-presence").style.display = "block";
-   document.getElementById("temp").textContent = "Unset temporary storage";
-  } else {
-   document.getElementById("temp-presence").style.display = "none"; 
+    drawPage();
   }
 
   document.getElementById("perm").addEventListener('click', function(){
    this.classList.toggle('set');
    if (this.classList.contains("set")) {
      sessionStorage.setItem("perm", "true");
-     this.textContent="Unset permanent storage";
-     document.getElementById("perm-presence").style.display = "block";
    } else {
      sessionStorage.removeItem("perm"); 
-     this.textContent="Set permanent storage";
-     document.getElementById("perm-presence").style.display = "none";
    }
+   drawPage();
   });
 
   document.getElementById("temp").addEventListener('click', function(){
@@ -70,12 +71,11 @@
        sessionStorage.removeItem("temp");
      }
      this.textContent="Unset temporary storage";
-     document.getElementById("temp-presence").style.display = "block";
    } else {
      sessionStorage.removeItem("temp");
      this.textContent="Set temporary storage"; 
-     document.getElementById("temp-presence").style.display = "none";
    }
+   drawPage();
   });
 
 
