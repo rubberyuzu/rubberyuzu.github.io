@@ -23,7 +23,7 @@
     } else {
       document.getElementById("perm-presence").style.display = "none"; 
       document.getElementById("perm").textContent = "Set permanent storage"; 
-   }
+    }
 
     if (sessionStorage.getItem("temp") == "true") {
       document.getElementById("temp-presence").style.display = "block";
@@ -32,9 +32,7 @@
       document.getElementById("temp-presence").style.display = "none";
       document.getElementById("temp").textContent = "Set temporary storage";
     }
-  }
-  onpageshow = (event) => {
-    document.getElementById("persisted").textContent = "persisted: " + event.persisted;
+    
     document.getElementById("type").textContent = "type: " + performance.getEntriesByType("navigation")[0].type;
     let reasonsText = "notRestoredReasons: ";
     let reasons = performance.getEntriesByType("navigation")[0].notRestoredReasons;
@@ -50,8 +48,14 @@
       reasonsText += "null"; 
     }
     document.getElementById("nrr").textContent = reasonsText;
+
+  }
+  onpageshow = (event) => {
+    document.getElementById("persisted").textContent = "persisted: " + event.persisted;
     drawPage();
   }
+
+  drawPage();
 
   document.getElementById("perm").addEventListener('click', function(){
    this.classList.toggle('set');
