@@ -4,6 +4,8 @@
   <button type="button" id="temp">Set temporary storage</button>
   <br><br>
 
+  <button type="button" id="unload">Register unload handler </button>
+
   <h4>Storage presence:</h4>
   <p id="perm-presence">Permanent storage is here!</p>
   <p id="temp-presence">Temporary storage is here!</p>
@@ -12,6 +14,7 @@
   <p id="type"></p>
   <p id="nrr"></p>
   <p id="persisted"></p>
+
 
   <br>
   <a href="https://google.com">Navigate away to google.com</a>
@@ -82,6 +85,18 @@
    drawPage();
   });
 
+  function unloadLog() {console.log('unload');}
+
+  document.getElementById("unload").addEventListener('click', function() {
+   this.classList.toggle('registered');
+   if (this.classList.contains('registered')) {
+     onunload = () => unloadLog();
+     this.textContent="Remove Unload handler";
+   } else {
+     removeEventListener("unload", unloadLog);
+     this.textContent="Register Unload handler";
+   }
+  })
 
   </script>
 </body>
