@@ -1,17 +1,8 @@
 <body>
-  <button type="button" id="perm">Set permanent storage</button>
-  <br><br>
-  <button type="button" id="temp">Set temporary storage</button>
-  <br><br>
-
   <button type="button" id="unload">Register unload handler </button>
 
-  <h4>Bfcache usage</h4>
+  <h4>Navigation status</h4>
   <p id="bfcache-use">Not used</p>
-
-  <h4>Storage presence:</h4>
-  <p id="perm-presence">Permanent storage is here!</p>
-  <p id="temp-presence">Temporary storage is here!</p>
 
   <h4>On Pageshow</h4>
   <p id="type"></p>
@@ -23,27 +14,19 @@
   <a href="https://google.com">Navigate away to google.com</a>
   <script>
   if (performance.getEntriesByType("navigation")[0].type == "back_forward") {
-    alert("cache miss");
-    document.getElementById("bfcache-use").textContent = "Not used";
+    logPossibleCacheMiss();
+  }
+
+  function logPossibleCacheMiss() {
+    // If "temp" storage is present, that means this is a tab duplicate.
+    if (sessionStorage.getItem("temp") != "true") {
+      document.getElementById("bfcache-use").textContent = "Bfcache not used or Browser restart";
+    } else {
+      document.getElementById("bfcache-use").textContent = "Tab duplicate";
+    }
   }
 
   function drawPage() {
-    if (sessionStorage.getItem("perm") == "true") {
-      document.getElementById("perm-presence").style.display = "block";
-      document.getElementById("perm").textContent = "Unset permanent storage";
-    } else {
-      document.getElementById("perm-presence").style.display = "none"; 
-      document.getElementById("perm").textContent = "Set permanent storage"; 
-    }
-
-    if (sessionStorage.getItem("temp") == "true") {
-      document.getElementById("temp-presence").style.display = "block";
-      document.getElementById("temp").textContent = "Unset temporary storage";
-    } else {
-      document.getElementById("temp-presence").style.display = "none";
-      document.getElementById("temp").textContent = "Set temporary storage";
-    }
-    
     document.getElementById("type").textContent = "type: " + performance.getEntriesByType("navigation")[0].type;
     let reasonsText = "notRestoredReasons: ";
     let reasons = performance.getEntriesByType("navigation")[0].notRestoredReasons;
@@ -62,39 +45,16 @@
 
   }
   onpageshow = (event) => {
-    document.getElementById("persisted").textContent = "persisted: " + event.persisted;
+   sessionStorage.setItem("temp", "true"); 
+   document.getElementById("persisted").textContent = "persisted: " + event.persisted;
     if (event.persisted) {
      document.getElementById("bfcache-use").textContent = "Used!";
     } 
     drawPage();
   }
-
-  drawPage();
-
-  document.getElementById("perm").addEventListener('click', function(){
-   this.classList.toggle('set');
-   if (this.classList.contains("set")) {
-     sessionStorage.setItem("perm", "true");
-   } else {
-     sessionStorage.removeItem("perm"); 
-   }
-   drawPage();
-  });
-
-  document.getElementById("temp").addEventListener('click', function(){
-   this.classList.toggle('set');
-   if (this.classList.contains("set")) {
-     sessionStorage.setItem("temp", "true");
-     onpagehide = () => {
-       sessionStorage.removeItem("temp");
-     }
-     this.textContent="Unset temporary storage";
-   } else {
-     sessionStorage.removeItem("temp");
-     this.textContent="Set temporary storage"; 
-   }
-   drawPage();
-  });
+  onpagehide = () => {
+   sessionStorage.removeItem("temp");
+  }
 
   function unloadLog() {console.log('unload');}
 
@@ -108,6 +68,5 @@
      this.textContent="Register Unload handler";
    }
   })
-
   </script>
 </body>
