@@ -23,7 +23,7 @@
   <a href="https://google.com">Navigate away to google.com</a>
   <script>
   if (performance.getEntriesByType("navigation")[0].type == "back_forward") {
-    console.log("cache miss");
+    alert("cache miss");
     document.getElementById("bfcache-use").textContent = "Not used";
   }
 
