@@ -1,4 +1,5 @@
 <body>
+  <p>Register unload handler to block bfcache.</p>
   <button type="button" id="unload">Register unload handler </button>
 
   <h4>Navigation status</h4>
@@ -48,7 +49,7 @@
    sessionStorage.setItem("temp", "true"); 
    document.getElementById("persisted").textContent = "persisted: " + event.persisted;
     if (event.persisted) {
-     document.getElementById("bfcache-use").textContent = "Used!";
+     document.getElementById("bfcache-use").textContent = "Bfcache used!";
     } 
     drawPage();
   }
