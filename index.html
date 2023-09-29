@@ -6,6 +6,9 @@
 
   <button type="button" id="unload">Register unload handler </button>
 
+  <h4>Bfcache usage</h4>
+  <p id="bfcache-use">Not used</p>
+
   <h4>Storage presence:</h4>
   <p id="perm-presence">Permanent storage is here!</p>
   <p id="temp-presence">Temporary storage is here!</p>
@@ -19,6 +22,11 @@
   <br>
   <a href="https://google.com">Navigate away to google.com</a>
   <script>
+  if (performance.getEntriesByType("navigation")[0].type == "back_forward") {
+    console.log("cache miss");
+    document.getElementById("bfcache-use").textContent = "Not used";
+  }
+
   function drawPage() {
     if (sessionStorage.getItem("perm") == "true") {
       document.getElementById("perm-presence").style.display = "block";
@@ -55,6 +63,9 @@
   }
   onpageshow = (event) => {
     document.getElementById("persisted").textContent = "persisted: " + event.persisted;
+    if (event.persisted) {
+     document.getElementById("bfcache-use").textContent = "Used!";
+    } 
     drawPage();
   }
 
